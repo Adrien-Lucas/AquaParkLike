@@ -9,5 +9,6 @@ using UnityEngine;
 public class TobogganModule : MonoBehaviour
 {
     [SerializeField] private Transform path; //The gameObject storing all the path points
-    [SerializeField] private Transform startLink; //The point at the beginning of the toboggan
+    public Transform endLink; //The point at the end of the module
+    public float angle;
 }
