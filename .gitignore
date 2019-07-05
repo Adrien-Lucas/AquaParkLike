@@ -3,3 +3,7 @@
 /Builds
 /Logs
 /Library
+/obj
+
+*.sln
+*.csproj
