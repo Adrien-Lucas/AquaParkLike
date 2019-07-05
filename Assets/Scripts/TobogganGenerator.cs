@@ -74,7 +74,7 @@ public class TobogganGenerator : MonoBehaviour
     void SpawnPlayer(TobogganModule module)
     {
         Instantiate(playerPrefab,
-            module.Path[0] + (module.Path[1] - module.Path[0]) * Random.Range(0f, 1f) + Vector3.up,
+            TotalPath[0] + (TotalPath[1] - TotalPath[0]) * Random.Range(0f, 1f),
             Quaternion.identity);
     }
 }

@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float releaseHardness = 1;
     [SerializeField] private float dragHardness = 1;
     [SerializeField] private Transform cameraPlaceHolder;
+    
+    [SerializeField] private float flyingRotationControl;
+    
     private Movements _movements;
 
     private void Start()
@@ -26,7 +29,16 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            _movements.deviation = Mathf.Clamp(_movements.deviation + Input.GetAxis("Mouse X") * dragHardness, -1f, 1f);
+            float mouseX = Input.GetAxis("Mouse X");
+            if (_movements.onPath)
+            {
+                _movements.deviation = Mathf.Clamp(_movements.deviation + mouseX * dragHardness, -1f, 1f);
+            }
+            else
+            {
+                transform.RotateAround(transform.position, transform.up, flyingRotationControl * mouseX * Time.deltaTime);
+            }
+            
         }
         else
             _movements.deviation = Mathf.Lerp(_movements.deviation, 0, Time.deltaTime * releaseHardness);

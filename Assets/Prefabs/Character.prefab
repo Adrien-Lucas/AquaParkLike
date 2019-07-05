@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1354673661423574090}
   - component: {fileID: 1354673661423574085}
   - component: {fileID: 1354673661423574084}
-  - component: {fileID: 1354673661423574091}
   m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
@@ -78,19 +77,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &1354673661423574091
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1354673661423574089}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1354673662048179343
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 1354673662048179343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 154.78, y: 22.43, z: 144.54}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 1354673661423574090}
   m_Father: {fileID: 0}
@@ -199,4 +185,11 @@ MonoBehaviour:
   speed: 5
   moveHardness: 5
   rotationHardness: 2
+  tobogganWidth: 2
   deviation: 0
+  offsetFromGround: 0.18
+  flyingSpeed: 6.48
+  fallSpeed: 0.05
+  onPath: 1
+  ejectionThresold: 0.95
+  ejectionForce: 0.3
