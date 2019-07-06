@@ -13,6 +13,7 @@ using Random = UnityEngine.Random;
 public class Obstacle : MonoBehaviour
 {
     [SerializeField] private float obstacleDensity;
+
     private void Start()
     {
         transform.GetChild(Random.Range(0, transform.childCount)).gameObject.SetActive(false); //At least on of the obstacle must be shut down to let a way trough
