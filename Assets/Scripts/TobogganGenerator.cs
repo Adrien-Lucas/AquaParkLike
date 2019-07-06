@@ -13,7 +13,8 @@ public class TobogganGenerator : MonoBehaviour
     [SerializeField] private int length = 10;
 
     [Header("Character spawner parameters")] 
-    
+    [SerializeField] private int AINumber;
+    [SerializeField] private Transform AIPrefab;
     [SerializeField] private Transform playerPrefab;
     
     private int _iterations = 0;
@@ -39,7 +40,7 @@ public class TobogganGenerator : MonoBehaviour
             InstantiateModule(module, startModule);
             //Path is cleaned from duplicates
             TotalPath = TotalPath.Distinct().ToList();
-            SpawnCharacters(module.GetComponent<TobogganModule>());
+            SpawnCharacters();
         }
     }
 
@@ -47,34 +48,33 @@ public class TobogganGenerator : MonoBehaviour
     {
         TobogganModule infos = actual.GetComponent<TobogganModule>();
         Transform parent = Instantiate(type, infos.endLink.position, Quaternion.identity);
-
-        if (parent.GetComponent<TobogganModule>())
-        {
-            Vector3 rotationAxis = Vector3.Cross(parent.forward, parent.up);
-            parent.RotateAround(parent.position, rotationAxis, parent.GetComponent<TobogganModule>().angle);
-            
-            //Add module's path to total path
-            TotalPath.InsertRange(0, infos.Path);
-        }
-
+        
         if (infos.endLink)
         {
             float yRotation = infos.endLink.eulerAngles.y;
             parent.localEulerAngles += yRotation * Vector3.up;
         }
         
+        //Add module's path to total path
+        TotalPath.InsertRange(0, parent.GetComponent<TobogganModule>().Path);
+        
         return parent;
     }
 
-    void SpawnCharacters(TobogganModule module)
+    private float spawnPosPercent; //percent of the start toboggan
+    void SpawnCharacters()
     {
-        SpawnPlayer(module);
+        SpawnOneCharacter(playerPrefab);
+        for (int i = 0; i < AINumber; i++)
+            SpawnOneCharacter(AIPrefab);
     }
 
-    void SpawnPlayer(TobogganModule module)
+    void SpawnOneCharacter(Transform prefab)
     {
-        Instantiate(playerPrefab,
-            TotalPath[0] + (TotalPath[1] - TotalPath[0]) * Random.Range(0f, 1f),
-            Quaternion.identity);
+        Vector3 spawnPos = TotalPath[0] + (TotalPath[1] - TotalPath[0]) * spawnPosPercent;
+        Transform character = Instantiate(prefab, spawnPos, Quaternion.identity);
+        spawnPosPercent += 1f / (AINumber + 1); //+1 is because of the player
+        character.GetComponent<Movements>().posOnPath = spawnPos;
+        Debug.Log(spawnPos);
     }
 }

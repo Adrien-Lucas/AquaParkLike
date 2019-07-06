@@ -9,11 +9,14 @@ public class Movements : MonoBehaviour
 {
     //Path follow vars
     List<Vector3> totalPath;
-    private int actualWaypoint = 0, nextWaypoint = 1;
-    private Vector3 posOnPath;
+    private int actualWaypoint = 0;
+    private int nextWaypoint => actualWaypoint + 1;
+    [HideInInspector] public Vector3 posOnPath;
+    public static bool Moving; //is Static because all characters starts the competition at the same time
 
     //Movements vars
     [SerializeField] private float speed = 1;
+    private float speedMultiplicator = 1;
     [SerializeField] private float moveHardness = 1;
     [SerializeField] private float rotationHardness = 1;
     [SerializeField] private float tobogganWidth = 2;
@@ -25,7 +28,7 @@ public class Movements : MonoBehaviour
     [SerializeField] private float fallSpeed = 1;
     
     //Obstacles parameters
-    [SerializeField] private float speedReductionPercentage = 0.5f;
+    [SerializeField] private float speedReductionMultiplicator = 0.5f;
     [SerializeField] private float speedReductionTime = 1;
     
 
@@ -37,7 +40,6 @@ public class Movements : MonoBehaviour
     void Start()
     {
         totalPath = TobogganGenerator.TotalPath;
-        posOnPath = totalPath[0];
     }
 
     private void OnDrawGizmos()
@@ -48,19 +50,26 @@ public class Movements : MonoBehaviour
 
     void Update()
     {
+
         RaycastHit hit;
-        if (onPath)
+        if (onPath && nextWaypoint < totalPath.Count)
         {
             Vector3 segment = totalPath[nextWaypoint] - totalPath[actualWaypoint];
-            if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
+            //Moving reference position on path
+            if (Moving)
             {
-                posOnPath += speed * Time.deltaTime * segment.normalized;
+                Debug.Log(actualWaypoint + " ; " + nextWaypoint + " ; " + posOnPath + " ; " + Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude + " <? " + segment.magnitude);
+                if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
+                {
+                    float deviationMultiplicator = (1f - Math.Abs(deviation) / 4f);
+                    posOnPath += speed * speedMultiplicator * deviationMultiplicator * Time.deltaTime * segment.normalized;
+                }
+                else
+                {
+                    actualWaypoint++;
+                }
             }
-            else
-            {
-                actualWaypoint++;
-                nextWaypoint++;
-            }
+
 
             //ORIENTATING CHARACTER
             transform.forward = Vector3.Lerp(transform.forward, segment, Time.deltaTime * rotationHardness);
@@ -80,7 +89,7 @@ public class Movements : MonoBehaviour
                 BumpCharacterOut();
             }
         }
-        else //The character is flying
+        else if(!onPath) //The character is flying
         {
             transform.position += Time.deltaTime * flyingSpeed * transform.forward - transform.up * fallSpeed ;
 
@@ -92,7 +101,6 @@ public class Movements : MonoBehaviour
                 {
                     int nearestId = totalPath.IndexOf(nearests[0]);
                     actualWaypoint = nearestId;
-                    nextWaypoint = nearestId + 1;
                     posOnPath = totalPath[actualWaypoint];
                     onPath = true;
                 }
@@ -124,10 +132,10 @@ public class Movements : MonoBehaviour
 
     private IEnumerator KnockedOut()
     {
-        speed *= speedReductionPercentage;
+        speedMultiplicator -= speedReductionMultiplicator;
         
         yield return new WaitForSeconds(speedReductionTime);
 
-        speed /= speedReductionPercentage;
+        speedMultiplicator += speedReductionMultiplicator;
     }
 }
