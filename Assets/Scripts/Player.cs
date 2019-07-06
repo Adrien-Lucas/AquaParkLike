@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float releaseHardness = 1;
-    [SerializeField] private float dragHardness = 1;
+    [SerializeField] private float dragControl = 1;
     [SerializeField] private Transform cameraPlaceHolder;
     
     [SerializeField] private float flyingRotationControl;
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
             float mouseX = Input.GetAxis("Mouse X");
             if (_movements.onPath)
             {
-                _movements.deviation = Mathf.Clamp(_movements.deviation + mouseX * dragHardness, -1f, 1f);
+                _movements.deviation = Mathf.Clamp(_movements.deviation + mouseX * dragControl, -1f, 1f);
             }
             else
             {

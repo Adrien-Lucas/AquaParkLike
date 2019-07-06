@@ -188,8 +188,8 @@ MonoBehaviour:
   tobogganWidth: 2
   deviation: 0
   offsetFromGround: 0.18
-  flyingSpeed: 6.48
+  flyingSpeed: 7
   fallSpeed: 0.05
   onPath: 1
-  ejectionThresold: 0.95
+  ejectionThresold: 0.98
   ejectionForce: 0.3

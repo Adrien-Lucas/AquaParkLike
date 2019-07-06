@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   releaseHardness: 3
-  dragHardness: 0.05
+  dragControl: 0.025
   cameraPlaceHolder: {fileID: 6605873046112276954}
-  ejectionThresold: 2
-  ejectionForce: 2
   flyingRotationControl: 50
 --- !u!1 &6638939890248152415
 GameObject:

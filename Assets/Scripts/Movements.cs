@@ -80,7 +80,7 @@ public class Movements : MonoBehaviour
         {
             transform.position += Time.deltaTime * flyingSpeed * transform.forward - transform.up * fallSpeed ;
 
-            if (Physics.Raycast(transform.position, Vector3.down, out hit, 1, 1<< 9))
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, 1<< 9))
             {
                 //Find approximate position on path
                 List<Vector3> nearests = totalPath.OrderBy(p => Vector3.Distance(transform.position, p)).ToList();
