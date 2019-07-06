@@ -75,6 +75,5 @@ public class TobogganGenerator : MonoBehaviour
         Transform character = Instantiate(prefab, spawnPos, Quaternion.identity);
         spawnPosPercent += 1f / (AINumber + 1); //+1 is because of the player
         character.GetComponent<Movements>().posOnPath = spawnPos;
-        Debug.Log(spawnPos);
     }
 }

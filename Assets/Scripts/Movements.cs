@@ -33,7 +33,7 @@ public class Movements : MonoBehaviour
     
 
     [HideInInspector] public bool onPath = true; //Says is the player is following the path or flying
-    [SerializeField] private float ejectionThresold;
+    public float ejectionThresold;
     [SerializeField] private float ejectionForce;
 
     // Start is called before the first frame update
@@ -58,10 +58,9 @@ public class Movements : MonoBehaviour
             //Moving reference position on path
             if (Moving)
             {
-                Debug.Log(actualWaypoint + " ; " + nextWaypoint + " ; " + posOnPath + " ; " + Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude + " <? " + segment.magnitude);
                 if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
                 {
-                    float deviationMultiplicator = (1f - Math.Abs(deviation) / 4f);
+                    float deviationMultiplicator = (1f - Math.Abs(deviation) / 4f); //The character is faster when he is near the center of the toboggan
                     posOnPath += speed * speedMultiplicator * deviationMultiplicator * Time.deltaTime * segment.normalized;
                 }
                 else
@@ -120,7 +119,7 @@ public class Movements : MonoBehaviour
     private void BumpCharacterOut()
     {
         onPath = false;
-        
+        deviation = 0; //Reset deviation to avoid reejection when touching a toboggan again
         //X rotation axis reset
         Vector3 newRot = transform.eulerAngles;
         newRot.x = 0;
