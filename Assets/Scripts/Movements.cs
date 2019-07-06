@@ -24,6 +24,10 @@ public class Movements : MonoBehaviour
     [SerializeField] private float flyingSpeed = 1;
     [SerializeField] private float fallSpeed = 1;
     
+    //Obstacles parameters
+    [SerializeField] private float speedReductionPercentage = 0.5f;
+    [SerializeField] private float speedReductionTime = 1;
+    
 
     [HideInInspector] public bool onPath = true; //Says is the player is following the path or flying
     [SerializeField] private float ejectionThresold;
@@ -96,9 +100,34 @@ public class Movements : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.transform.CompareTag("Obstacle"))
+        {
+            other.gameObject.SetActive(false);
+            StartCoroutine(KnockedOut());
+        }
+    }
+
     private void BumpCharacterOut()
     {
         onPath = false;
+        
+        //X rotation axis reset
+        Vector3 newRot = transform.eulerAngles;
+        newRot.x = 0;
+        transform.eulerAngles = newRot;
+        
+        //Bumping out
         transform.position += ((Mathf.Sign(deviation) * transform.right + Vector3.up) * ejectionForce);
+    }
+
+    private IEnumerator KnockedOut()
+    {
+        speed *= speedReductionPercentage;
+        
+        yield return new WaitForSeconds(speedReductionTime);
+
+        speed /= speedReductionPercentage;
     }
 }
