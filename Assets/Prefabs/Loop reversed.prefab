@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &308122017338371627
+--- !u!1001 &8212503101947888128
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 3452908506707166310, guid: 5176f935309346346b74bfc8d21241dc,
         type: 3}
       propertyPath: m_Name
-      value: LoopReversed
+      value: Loop reversed
       objectReference: {fileID: 0}
     - target: {fileID: 5911965317075522876, guid: 5176f935309346346b74bfc8d21241dc,
         type: 3}
