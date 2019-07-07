@@ -10,12 +10,6 @@ public class CameraFollow : MonoBehaviour
     [HideInInspector] public Transform placeHolder;
     [HideInInspector] public Transform target;
     
-    public void Initialize()
-    {
-        //transform.position = placeHolder.position;
-        //transform.LookAt(target);
-    }
-    
     void Update()
     {
         if (target)

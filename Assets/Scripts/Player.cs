@@ -22,7 +22,6 @@ public class Player : MonoBehaviour
         CameraFollow cameraFollow = FindObjectOfType<CameraFollow>();
         cameraFollow.target = transform;
         cameraFollow.placeHolder = cameraPlaceHolder;
-        cameraFollow.Initialize();
     }
 
 
