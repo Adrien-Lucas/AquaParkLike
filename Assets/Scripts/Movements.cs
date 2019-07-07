@@ -9,35 +9,42 @@ public class Movements : MonoBehaviour
 {
     //Path follow vars
     List<Vector3> totalPath;
-    private int actualWaypoint = 0, nextWaypoint = 1;
-    private Vector3 posOnPath;
+    private int actualWaypoint = 0;
+    private int nextWaypoint => actualWaypoint + 1;
+    [HideInInspector] public Vector3 posOnPath;
+    public static bool Moving; //is Static because all characters starts the competition at the same time
 
     //Movements vars
+    [NonSerialized] public float deviation; //Clamped value between -1 and 1, 0 is the center of the toboggan
+    [NonSerialized] public bool deviationModifAuthorization = true;
+    [NonSerialized] public float absDeviationAcceleration;
+    
     [SerializeField] private float speed = 1;
     [SerializeField] private float moveHardness = 1;
     [SerializeField] private float rotationHardness = 1;
     [SerializeField] private float tobogganWidth = 2;
-    [HideInInspector] public float deviation; //Clamped value between -1 and 1, 0 is the center of the toboggan
     [SerializeField] private float offsetFromGround;
+    
+    public float speedMultiplicator = 1;
+    private float _lastDeviation;
     
     //Flying parameters
     [SerializeField] private float flyingSpeed = 1;
     [SerializeField] private float fallSpeed = 1;
     
     //Obstacles parameters
-    [SerializeField] private float speedReductionPercentage = 0.5f;
-    [SerializeField] private float speedReductionTime = 1;
+    [SerializeField] private float obstacleSpeedMultiplicator = 0.5f;
+    [SerializeField] private float obstacleReductionTime = 1;
     
 
-    [HideInInspector] public bool onPath = true; //Says is the player is following the path or flying
-    [SerializeField] private float ejectionThresold;
+    [NonSerialized] public bool onPath = true; //Says is the player is following the path or flying
+    public float ejectionThresold;
     [SerializeField] private float ejectionForce;
 
     // Start is called before the first frame update
     void Start()
     {
         totalPath = TobogganGenerator.TotalPath;
-        posOnPath = totalPath[0];
     }
 
     private void OnDrawGizmos()
@@ -49,18 +56,23 @@ public class Movements : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-        if (onPath)
+        if (onPath && nextWaypoint < totalPath.Count)
         {
             Vector3 segment = totalPath[nextWaypoint] - totalPath[actualWaypoint];
-            if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
+            //Moving reference position on path
+            if (Moving)
             {
-                posOnPath += speed * Time.deltaTime * segment.normalized;
+                if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
+                {
+                    float deviationMultiplicator = (1f - Math.Abs(deviation) / 4f); //The character is faster when he is near the center of the toboggan
+                    posOnPath += speed * speedMultiplicator * deviationMultiplicator * Time.deltaTime * segment.normalized;
+                }
+                else
+                {
+                    actualWaypoint++;
+                }
             }
-            else
-            {
-                actualWaypoint++;
-                nextWaypoint++;
-            }
+
 
             //ORIENTATING CHARACTER
             transform.forward = Vector3.Lerp(transform.forward, segment, Time.deltaTime * rotationHardness);
@@ -77,10 +89,10 @@ public class Movements : MonoBehaviour
 
             if (Mathf.Abs(deviation) > ejectionThresold)
             {
-                BumpCharacterOut();
+                StartFly();
             }
         }
-        else //The character is flying
+        else if(!onPath) //The character is flying
         {
             transform.position += Time.deltaTime * flyingSpeed * transform.forward - transform.up * fallSpeed ;
 
@@ -92,12 +104,14 @@ public class Movements : MonoBehaviour
                 {
                     int nearestId = totalPath.IndexOf(nearests[0]);
                     actualWaypoint = nearestId;
-                    nextWaypoint = nearestId + 1;
                     posOnPath = totalPath[actualWaypoint];
                     onPath = true;
                 }
             }
         }
+        
+        absDeviationAcceleration = Mathf.Abs(_lastDeviation - deviation);
+        _lastDeviation = deviation;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -105,14 +119,14 @@ public class Movements : MonoBehaviour
         if (other.transform.CompareTag("Obstacle"))
         {
             other.gameObject.SetActive(false);
-            StartCoroutine(KnockedOut());
+            StartCoroutine(TempMultiplicator(obstacleSpeedMultiplicator, obstacleReductionTime));
         }
     }
 
-    private void BumpCharacterOut()
+    private void StartFly()
     {
         onPath = false;
-        
+        //deviation = 0; //Reset deviation to avoid reejection when touching a toboggan again
         //X rotation axis reset
         Vector3 newRot = transform.eulerAngles;
         newRot.x = 0;
@@ -122,12 +136,41 @@ public class Movements : MonoBehaviour
         transform.position += ((Mathf.Sign(deviation) * transform.right + Vector3.up) * ejectionForce);
     }
 
-    private IEnumerator KnockedOut()
+    public void ApplyTempDeviation(float modification, float duration)
     {
-        speed *= speedReductionPercentage;
-        
-        yield return new WaitForSeconds(speedReductionTime);
+        StartCoroutine(TempDeviation(modification, duration));
+    }
 
-        speed /= speedReductionPercentage;
+    private IEnumerator TempDeviation(float modification, float duration)
+    {
+        deviationModifAuthorization = false;
+
+        float timer = 0;
+
+        //Using a while is usually not safe, but the lines here are full safe
+        while (timer < duration)
+        {
+            float delta = Time.fixedDeltaTime * (modification / duration);
+            deviation += delta;
+            timer += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        if(GetComponent<Player>())
+            Debug.Log(deviation);
+        deviationModifAuthorization = true;
+    }
+
+    public void ApplyTempMultiplicator(float multiplicator, float duration)
+    {
+        StartCoroutine(TempMultiplicator(multiplicator, duration));
+    }
+    
+    private IEnumerator TempMultiplicator(float multiplicator, float duration)
+    {
+        speedMultiplicator += multiplicator;
+        
+        yield return new WaitForSeconds(duration);
+
+        speedMultiplicator -= multiplicator;
     }
 }

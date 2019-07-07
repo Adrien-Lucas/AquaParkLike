@@ -28,7 +28,6 @@ public class TobogganModule : MonoBehaviour
 
     //The gameObject storing all the path points
     public Transform endLink; //The point at the end of the module
-    public float angle;
 
     [Header("Gizmos parameters")] [SerializeField]
     private Color rayColor = Color.white;

@@ -1,5 +1,3 @@
-
-
 using System;
 using UnityEngine;
 
@@ -30,17 +28,17 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             float mouseX = Input.GetAxis("Mouse X");
-            if (_movements.onPath)
+            if (_movements.onPath && _movements.deviationModifAuthorization)
             {
                 _movements.deviation = Mathf.Clamp(_movements.deviation + mouseX * dragControl, -1f, 1f);
             }
-            else
+            else if(!_movements.onPath)
             {
                 transform.RotateAround(transform.position, transform.up, flyingRotationControl * mouseX * Time.deltaTime);
             }
             
         }
-        else
+        else if(_movements.deviationModifAuthorization)
             _movements.deviation = Mathf.Lerp(_movements.deviation, 0, Time.deltaTime * releaseHardness);
     }
 
