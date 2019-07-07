@@ -15,24 +15,29 @@ public class Movements : MonoBehaviour
     public static bool Moving; //is Static because all characters starts the competition at the same time
 
     //Movements vars
+    [NonSerialized] public float deviation; //Clamped value between -1 and 1, 0 is the center of the toboggan
+    [NonSerialized] public bool deviationModifAuthorization = true;
+    [NonSerialized] public float absDeviationAcceleration;
+    
     [SerializeField] private float speed = 1;
-    private float speedMultiplicator = 1;
     [SerializeField] private float moveHardness = 1;
     [SerializeField] private float rotationHardness = 1;
     [SerializeField] private float tobogganWidth = 2;
-    [HideInInspector] public float deviation; //Clamped value between -1 and 1, 0 is the center of the toboggan
     [SerializeField] private float offsetFromGround;
+    
+    public float speedMultiplicator = 1;
+    private float _lastDeviation;
     
     //Flying parameters
     [SerializeField] private float flyingSpeed = 1;
     [SerializeField] private float fallSpeed = 1;
     
     //Obstacles parameters
-    [SerializeField] private float speedReductionMultiplicator = 0.5f;
-    [SerializeField] private float speedReductionTime = 1;
+    [SerializeField] private float obstacleSpeedMultiplicator = 0.5f;
+    [SerializeField] private float obstacleReductionTime = 1;
     
 
-    [HideInInspector] public bool onPath = true; //Says is the player is following the path or flying
+    [NonSerialized] public bool onPath = true; //Says is the player is following the path or flying
     public float ejectionThresold;
     [SerializeField] private float ejectionForce;
 
@@ -50,7 +55,6 @@ public class Movements : MonoBehaviour
 
     void Update()
     {
-
         RaycastHit hit;
         if (onPath && nextWaypoint < totalPath.Count)
         {
@@ -85,7 +89,7 @@ public class Movements : MonoBehaviour
 
             if (Mathf.Abs(deviation) > ejectionThresold)
             {
-                BumpCharacterOut();
+                StartFly();
             }
         }
         else if(!onPath) //The character is flying
@@ -105,6 +109,9 @@ public class Movements : MonoBehaviour
                 }
             }
         }
+        
+        absDeviationAcceleration = Mathf.Abs(_lastDeviation - deviation);
+        _lastDeviation = deviation;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -112,14 +119,14 @@ public class Movements : MonoBehaviour
         if (other.transform.CompareTag("Obstacle"))
         {
             other.gameObject.SetActive(false);
-            StartCoroutine(KnockedOut());
+            StartCoroutine(TempMultiplicator(obstacleSpeedMultiplicator, obstacleReductionTime));
         }
     }
 
-    private void BumpCharacterOut()
+    private void StartFly()
     {
         onPath = false;
-        deviation = 0; //Reset deviation to avoid reejection when touching a toboggan again
+        //deviation = 0; //Reset deviation to avoid reejection when touching a toboggan again
         //X rotation axis reset
         Vector3 newRot = transform.eulerAngles;
         newRot.x = 0;
@@ -129,12 +136,41 @@ public class Movements : MonoBehaviour
         transform.position += ((Mathf.Sign(deviation) * transform.right + Vector3.up) * ejectionForce);
     }
 
-    private IEnumerator KnockedOut()
+    public void ApplyTempDeviation(float modification, float duration)
     {
-        speedMultiplicator -= speedReductionMultiplicator;
-        
-        yield return new WaitForSeconds(speedReductionTime);
+        StartCoroutine(TempDeviation(modification, duration));
+    }
 
-        speedMultiplicator += speedReductionMultiplicator;
+    private IEnumerator TempDeviation(float modification, float duration)
+    {
+        deviationModifAuthorization = false;
+
+        float timer = 0;
+
+        //Using a while is usually not safe, but the lines here are full safe
+        while (timer < duration)
+        {
+            float delta = Time.fixedDeltaTime * (modification / duration);
+            deviation += delta;
+            timer += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        if(GetComponent<Player>())
+            Debug.Log(deviation);
+        deviationModifAuthorization = true;
+    }
+
+    public void ApplyTempMultiplicator(float multiplicator, float duration)
+    {
+        StartCoroutine(TempMultiplicator(multiplicator, duration));
+    }
+    
+    private IEnumerator TempMultiplicator(float multiplicator, float duration)
+    {
+        speedMultiplicator += multiplicator;
+        
+        yield return new WaitForSeconds(duration);
+
+        speedMultiplicator -= multiplicator;
     }
 }

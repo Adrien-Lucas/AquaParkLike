@@ -11,7 +11,7 @@ public class AI : MonoBehaviour
     private float _timer;
     private float _currentDeviationDuration;
     private float _targetDeviation;
-    private float _marginFromEjection;
+    [SerializeField] private float _marginFromEjection;
     private float _maxDeviation;
 
     void Start()
@@ -22,6 +22,8 @@ public class AI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!Movements.Moving) return;
+        
         if (_timer > _currentDeviationDuration)
         {
             _currentDeviationDuration = Random.Range(deviationChangeTimeRange.x, deviationChangeTimeRange.y);
@@ -30,7 +32,8 @@ public class AI : MonoBehaviour
             _timer = 0;
         }
 
-        _movements.deviation = Mathf.Lerp(_movements.deviation, _targetDeviation, dragControl * Time.deltaTime);
+        if(_movements.deviationModifAuthorization)
+            _movements.deviation = Mathf.Lerp(_movements.deviation, _targetDeviation, dragControl * Time.deltaTime);
 
         _timer += Time.deltaTime;
     }
