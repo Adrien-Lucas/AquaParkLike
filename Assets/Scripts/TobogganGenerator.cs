@@ -12,10 +12,11 @@ public class TobogganGenerator : MonoBehaviour
     [SerializeField] private Transform startModule;
     [SerializeField] private int length = 10;
 
-    [Header("Character spawner parameters")] 
+    [Header("Lobby parameters")] 
     [SerializeField] private int AINumber;
     [SerializeField] private Transform AIPrefab;
     [SerializeField] private Transform playerPrefab;
+    [SerializeField] private string cameraLobbyPlaceHolderGameObjectName = "CameraLobbyPlaceHolder";
     
     private int _iterations = 0;
     public static List<Vector3> TotalPath = new List<Vector3>();
@@ -67,6 +68,9 @@ public class TobogganGenerator : MonoBehaviour
         SpawnOneCharacter(playerPrefab);
         for (int i = 0; i < AINumber; i++)
             SpawnOneCharacter(AIPrefab);
+
+        Transform camHolder = GameObject.Find(cameraLobbyPlaceHolderGameObjectName).transform;
+        FindObjectOfType<Camera>().transform.SetPositionAndRotation(camHolder.position, camHolder.rotation);
     }
 
     void SpawnOneCharacter(Transform prefab)

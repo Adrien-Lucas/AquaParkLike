@@ -407,8 +407,8 @@ MonoBehaviour:
   - {fileID: 2590459484804650812, guid: 5c4911b7e31d07c48bb067aaf01f3dc2, type: 3}
   startModule: {fileID: 8709273058120763113, guid: a4485f7a7f98d7649b15c530c6106156,
     type: 3}
-  length: 20
-  AINumber: 5
+  length: 15
+  AINumber: 9
   AIPrefab: {fileID: 1044802491698909049, guid: 7a8313da4ddaed24bb2394ab8963b9c9,
     type: 3}
   playerPrefab: {fileID: 2397493456087505505, guid: 9471ffb29106ff24d843ab063a981fbf,
@@ -1090,7 +1090,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1237603328}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -361.53918, y: -5.288, z: -358}
+  m_LocalPosition: {x: -361.53918, y: -5.73, z: -358}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1511638660}
@@ -1110,7 +1110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathHolder: {fileID: 0}
   endLink: {fileID: 1237603329}
-  angle: 0
   rayColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1310114497
 GameObject:

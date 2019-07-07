@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Random = UnityEngine.Random;
 
 public class Movements : MonoBehaviour
 {
@@ -70,6 +71,11 @@ public class Movements : MonoBehaviour
                 else
                 {
                     actualWaypoint++;
+
+                    if (actualWaypoint == totalPath.Count - 1)//End
+                    {
+                        PlayEnd();
+                    }
                 }
             }
 
@@ -112,6 +118,20 @@ public class Movements : MonoBehaviour
         
         absDeviationAcceleration = Mathf.Abs(_lastDeviation - deviation);
         _lastDeviation = deviation;
+    }
+
+    void PlayEnd()
+    {
+        Transform characterHolder = new GameObject().transform;
+        characterHolder.position = transform.position;
+        Vector3 scale = characterHolder.localScale;
+        scale.z *= Random.Range(1f, 1.2f);
+        characterHolder.localScale = scale;
+        characterHolder.localEulerAngles = Vector3.up * (transform.eulerAngles.y + Random.Range(-5f,5f));
+            
+        transform.parent = characterHolder.transform;
+        GetComponent<Movements>().enabled = false;
+        GetComponent<Animator>().enabled = true;   
     }
 
     private void OnCollisionEnter(Collision other)

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deviationChangeTimeRange: {x: 2, y: 20}
   dragControl: 2
-  _marginFromEjection: 0.1
+  _marginFromEjection: 0.3
 --- !u!1001 &2068039328937647090
 PrefabInstance:
   m_ObjectHideFlags: 0
