@@ -12,8 +12,8 @@ public class CameraFollow : MonoBehaviour
     
     public void Initialize()
     {
-        transform.position = placeHolder.position;
-        transform.LookAt(target);
+        //transform.position = placeHolder.position;
+        //transform.LookAt(target);
     }
     
     void Update()

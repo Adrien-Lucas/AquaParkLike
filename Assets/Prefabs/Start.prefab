@@ -91,6 +91,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3685628190179856059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3665377316494059203}
+  m_Layer: 9
+  m_Name: CameraLobbyPlaceHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3665377316494059203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3685628190179856059}
+  m_LocalRotation: {x: -0.26472464, y: 0.17186762, z: -0.04800474, w: -0.9476698}
+  m_LocalPosition: {x: 5.6522217, y: 8.852768, z: -21.8432}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8709273058120763113}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3921344694349351781
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3921344694349351781}
   m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.988, z: -10.31}
+  m_LocalPosition: {x: 0, y: 1.988, z: -19.19}
   m_LocalScale: {x: 5.4799995, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 8709273058120763113}
@@ -236,7 +266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5440462480887941252}
   m_LocalRotation: {x: -0, y: 1, z: 4.4435904e-23, w: -4e-45}
-  m_LocalPosition: {x: -0, y: -0.003, z: -0.0129}
+  m_LocalPosition: {x: -0, y: 0, z: -0.00478}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5484272241242565518}
@@ -269,8 +299,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5718496925203503544}
   m_LocalRotation: {x: 1.0587912e-22, y: -1, z: -4.4435907e-23, w: 0}
-  m_LocalPosition: {x: 0, y: 0.040000003, z: -0.099999994}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.040000003, z: -0.18869}
+  m_LocalScale: {x: 1, y: 1, z: 1.88689}
   m_Children:
   - {fileID: 5484272241242565518}
   m_Father: {fileID: 8333700410129751523}
@@ -429,6 +459,7 @@ Transform:
   - {fileID: 3921344694349351777}
   - {fileID: 8952840306562805696}
   - {fileID: 8333700410129751523}
+  - {fileID: 3665377316494059203}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

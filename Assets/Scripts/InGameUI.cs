@@ -16,5 +16,6 @@ public class InGameUI : MonoBehaviour
     {
         Movements.Moving = true;
         startButton.gameObject.SetActive(false);
+        FindObjectOfType<Player>().InitializeCamera();
     }
 }
