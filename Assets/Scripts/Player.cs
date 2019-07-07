@@ -14,17 +14,22 @@ public class Player : MonoBehaviour
     private void Start()
     {
         _movements = GetComponent<Movements>();
-        
+    }
+
+    public void InitializeCamera()
+    {
         //Setting up the camera
         CameraFollow cameraFollow = FindObjectOfType<CameraFollow>();
         cameraFollow.target = transform;
         cameraFollow.placeHolder = cameraPlaceHolder;
         cameraFollow.Initialize();
-
     }
 
+
+    private bool lastMoving = false;
     void Update()
     {
+        
         if (Input.GetMouseButton(0))
         {
             float mouseX = Input.GetAxis("Mouse X");
