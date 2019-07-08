@@ -37,13 +37,13 @@ public class Player : MonoBehaviour
         cameraFollow.target = transform;
         cameraFollow.placeHolder = cameraPlaceHolder;
     }
-
+    
     void Update()
     {
         
-        if (Input.GetMouseButton(0)) //The player drags the character on the sides
+        if (Input.touchCount > 0 || Input.GetMouseButton(0)) //The player drags the character on the sides
         {
-            float mouseX = Input.GetAxis("Mouse X");
+            float mouseX = InputManager.MouseX;
             if (_movements.onPath && _movements.deviationModifAuthorization)
             {
                 _movements.deviation = Mathf.Clamp(_movements.deviation + mouseX * dragControl, -1f, 1f);
@@ -51,11 +51,11 @@ public class Player : MonoBehaviour
             else if(!_movements.onPath)
             {
                 transform.RotateAround(transform.position, transform.up, flyingRotationControl * mouseX * Time.deltaTime);
-            }
-            
+            }        
         }
         else if(_movements.deviationModifAuthorization) //When the character is released, he returns to the center of the toboggan by itself
             _movements.deviation = Mathf.Lerp(_movements.deviation, 0, Time.deltaTime * releaseHardness);
+
     }
 
 }
