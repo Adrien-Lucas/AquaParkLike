@@ -15,7 +15,7 @@ MonoBehaviour:
   releaseHardness: 3
   dragControl: 0.025
   cameraPlaceHolder: {fileID: 6605873046112276954}
-  flyingRotationControl: 50
+  flyingRotationControl: 70
 --- !u!1 &6638939890248152415
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,6 +112,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2354639524569100327, guid: 770105a55ae9d9049ac0e7da92cac627,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7840319593652765772, guid: 770105a55ae9d9049ac0e7da92cac627,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4853577400250960821, guid: 770105a55ae9d9049ac0e7da92cac627,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6286336834523179401, guid: 770105a55ae9d9049ac0e7da92cac627,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822355149753541170, guid: 770105a55ae9d9049ac0e7da92cac627,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 770105a55ae9d9049ac0e7da92cac627, type: 3}

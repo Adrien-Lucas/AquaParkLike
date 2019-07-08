@@ -151,7 +151,7 @@ MonoBehaviour:
   speedMultiplicator: 1
   flyingSpeed: 7
   fallSpeed: 0.05
-  obstacleSpeedMultiplicator: -0.5
+  obstacleSpeedMultiplicator: 0.5
   obstacleReductionTime: 1
   ejectionThresold: 0.98
   ejectionForce: 0.3

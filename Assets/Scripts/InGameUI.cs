@@ -10,10 +10,13 @@ using UnityEngine.UI;
 public class InGameUI : MonoBehaviour
 {
     [SerializeField] private Button startButton;
-    public Button restartButton;
+    [SerializeField] private Button restartButton;
     [SerializeField] private Image progressionBar;
     [SerializeField] private TextMeshProUGUI positionText;
-
+    [SerializeField] private Button mushroomButton;
+    [SerializeField] private TextMeshProUGUI mushroomCountText;
+    [SerializeField] private int mushroomCount;
+    
     private bool gameEnded;
     Movements playerMovements;
     Movements[] allMovements;
@@ -23,6 +26,7 @@ public class InGameUI : MonoBehaviour
     {
         startButton.onClick.AddListener(StartButton);
         restartButton.onClick.AddListener(RestartButton);
+        mushroomButton.onClick.AddListener(MushroomButton);
         
         Initialize();
     }
@@ -31,7 +35,9 @@ public class InGameUI : MonoBehaviour
     {
         startButton.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(false);
-        
+        mushroomButton.gameObject.SetActive(false);
+        mushroomCountText.text = "x" + mushroomCount;
+
         playerMovements = FindObjectOfType<Player>().GetComponent<Movements>();
         allMovements = FindObjectsOfType<Movements>();
     }
@@ -52,20 +58,38 @@ public class InGameUI : MonoBehaviour
 
     public void End()
     {
+        mushroomButton.gameObject.SetActive(false);
         restartButton.gameObject.SetActive(true);
         gameEnded = true;
     }
 
-    public void StartButton()
+    private void StartButton()
     {
         Movements.Moving = true;
         startButton.gameObject.SetActive(false);
+        mushroomButton.gameObject.SetActive(true);
         FindObjectOfType<Player>().InitializeCamera();
     }
 
-    public void RestartButton()
+    private void RestartButton()
     {
         //It would have been much more efficient to reload only the necessary elements, but the scene is light enough to be fully reloaded
         SceneManager.LoadScene(0);
+    }
+
+    private void MushroomButton()
+    {
+        if (mushroomCount > 0)
+        {
+            mushroomCount--;
+            FindObjectOfType<Player>().GetComponent<Movements>().ApplyTempMultiplicator(1.5f, 3);
+            mushroomCountText.text = "x" + mushroomCount;
+        }
+        
+        if(mushroomCount <= 0)
+        {
+            mushroomCountText.text = "";
+            mushroomButton.interactable = false;
+        }
     }
 }

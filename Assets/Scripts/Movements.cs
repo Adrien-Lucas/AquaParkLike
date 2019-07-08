@@ -26,7 +26,7 @@ public class Movements : MonoBehaviour
     [SerializeField] private float tobogganWidth = 2;
     [SerializeField] private float offsetFromGround;
     
-    public float speedMultiplicator = 1;
+    [NonSerialized] public float speedMultiplicator = 1;
     private float _lastDeviation;
     
     //Flying parameters
@@ -108,7 +108,7 @@ public class Movements : MonoBehaviour
         }
         else if(!onPath) //The character is flying
         {
-            transform.position += Time.deltaTime * flyingSpeed * transform.forward - transform.up * fallSpeed ;
+            transform.position += Time.deltaTime * flyingSpeed * transform.forward - transform.up * fallSpeed;
 
             if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.5f, 1<< 9))
             {
@@ -190,10 +190,10 @@ public class Movements : MonoBehaviour
     public void ApplyTempMultiplicator(float multiplicator, float duration) { StartCoroutine(TempMultiplicator(multiplicator, duration)); }
     private IEnumerator TempMultiplicator(float multiplicator, float duration)
     {
-        speedMultiplicator += multiplicator;
+        speedMultiplicator += (multiplicator - 1f);
         
         yield return new WaitForSeconds(duration);
 
-        speedMultiplicator -= multiplicator;
+        speedMultiplicator -= (multiplicator -1f);
     }
 }
