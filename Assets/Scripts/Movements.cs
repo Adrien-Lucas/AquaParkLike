@@ -6,56 +6,65 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// Attach to : Character prefab
+/// This component manages all the movements of the characters
+/// </summary>
 public class Movements : MonoBehaviour
 {
     //Path follow vars
-    List<Vector3> totalPath;
+    private List<Vector3> totalPath;
     [NonSerialized] public int actualWaypoint = 0;
     private int nextWaypoint => actualWaypoint + 1;
     [HideInInspector] public Vector3 posOnPath;
     public static bool Moving; //is Static because all characters starts the competition at the same time
 
-    //Movements vars
+    [Header("Path follow parameters")]
     [NonSerialized] public float deviation; //Clamped value between -1 and 1, 0 is the center of the toboggan
     [NonSerialized] public bool deviationModifAuthorization = true;
     [NonSerialized] public float absDeviationAcceleration;
-    
+    [NonSerialized] public float speedMultiplicator = 1;
+    [NonSerialized] public bool onPath = true; //Says is the player is following the path or flying
+
     [SerializeField] private float speed = 1;
     [SerializeField] private float moveHardness = 1;
     [SerializeField] private float rotationHardness = 1;
     [SerializeField] private float tobogganWidth = 2;
     [SerializeField] private float offsetFromGround;
     
-    [NonSerialized] public float speedMultiplicator = 1;
     private float _lastDeviation;
     
-    //Flying parameters
+    [Header("Flying parameters")]
+
+    public float ejectionThresold;
+
+    [SerializeField] private float ejectionForce;
+    
+    [Header("Flying parameters")]
+    
     [SerializeField] private float flyingSpeed = 1;
     [SerializeField] private float fallSpeed = 1;
     
-    //Obstacles parameters
+    [Header("Obstacles parameters")]
+    
     [SerializeField] private float obstacleSpeedMultiplicator = 0.5f;
     [SerializeField] private float obstacleReductionTime = 1;
     
-
-    [NonSerialized] public bool onPath = true; //Says is the player is following the path or flying
-    public float ejectionThresold;
-    [SerializeField] private float ejectionForce;
+    //Privates
     private Animator _animator;
     private Player _player;
     private InGameUI _inGameUi;
-    private Player _player1;
 
     // Start is called before the first frame update
     void Start()
     {
-        _player1 = GetComponent<Player>();
         _inGameUi = FindObjectOfType<InGameUI>();
         _player = GetComponent<Player>();
         _animator = GetComponent<Animator>();
         totalPath = TobogganGenerator.TotalPath;
     }
 
+    // Draws a red sphere on the path according to the character's position on path
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -67,10 +76,12 @@ public class Movements : MonoBehaviour
         RaycastHit hit;
         if (onPath && nextWaypoint < totalPath.Count)
         {
-            Vector3 segment = totalPath[nextWaypoint] - totalPath[actualWaypoint];
+            Vector3 segment = totalPath[nextWaypoint] - totalPath[actualWaypoint]; //The segment between actual point and next point
+            
             //Moving reference position on path
             if (Moving)
             {
+                //The character's position is projected on segment, if this vector is longer than segment, it means that next point has been passed
                 if (Vector3.Project(posOnPath - totalPath[actualWaypoint], segment).magnitude < segment.magnitude)
                 {
                     float deviationMultiplicator = (1f - Math.Abs(deviation) / 4f); //The character is faster when he is near the center of the toboggan
@@ -101,6 +112,7 @@ public class Movements : MonoBehaviour
                 transform.position = Vector3.Slerp(transform.position, hit.point + hit.normal * offsetFromGround, Time.deltaTime * moveHardness);
             }
 
+            //EJECTION DETECTION
             if (Mathf.Abs(deviation) > ejectionThresold)
             {
                 StartFly();
@@ -124,10 +136,14 @@ public class Movements : MonoBehaviour
             }
         }
         
+        //The deviation acceleration is computed here, its used for collisions between characters
         absDeviationAcceleration = Mathf.Abs(_lastDeviation - deviation);
         _lastDeviation = deviation;
     }
 
+    /// <summary>
+    /// The function is called when the character reaches the end of the circuit
+    /// </summary>
     void PlayEnd()
     {
         //Final jump animation setup
@@ -149,13 +165,16 @@ public class Movements : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.CompareTag("Obstacle"))
+        if (other.transform.CompareTag("Obstacle")) //The character is slowed down when colliding with an obstacle
         {
             other.gameObject.SetActive(false);
             StartCoroutine(TempMultiplicator(obstacleSpeedMultiplicator, obstacleReductionTime));
         }
     }
-
+    
+    /// <summary>
+    /// This function makes the character flying
+    /// </summary>
     private void StartFly()
     {
         onPath = false;
@@ -168,6 +187,8 @@ public class Movements : MonoBehaviour
         transform.position += ((Mathf.Sign(deviation) * transform.right + Vector3.up) * ejectionForce);
     }
 
+    //TEMPORARY BEHAVIOUR FUNCTIONS
+    
     public void ApplyTempDeviation(float modification, float duration) { StartCoroutine(TempDeviation(modification, duration)); }
     private IEnumerator TempDeviation(float modification, float duration)
     {

@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Attach to : Canvas
+/// This components manages all the user interfaces of the game
+/// </summary>
 public class InGameUI : MonoBehaviour
 {
     [SerializeField] private Button startButton;
@@ -31,7 +35,7 @@ public class InGameUI : MonoBehaviour
         Initialize();
     }
 
-    public void Initialize()
+    public void Initialize() //Used for UI initialization
     {
         startButton.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(false);
@@ -56,6 +60,9 @@ public class InGameUI : MonoBehaviour
         positionText.text = position + sufix;
     }
 
+    /// <summary>
+    /// This function changes the UI to the "End" UI
+    /// </summary>
     public void End()
     {
         mushroomButton.gameObject.SetActive(false);
@@ -63,6 +70,9 @@ public class InGameUI : MonoBehaviour
         gameEnded = true;
     }
 
+    /// <summary>
+    /// Called when the start button is pressed
+    /// </summary>
     private void StartButton()
     {
         Movements.Moving = true;
@@ -71,12 +81,18 @@ public class InGameUI : MonoBehaviour
         FindObjectOfType<Player>().InitializeCamera();
     }
 
+    /// <summary>
+    /// Called when the restart button is pressed
+    /// </summary>
     private void RestartButton()
     {
         //It would have been much more efficient to reload only the necessary elements, but the scene is light enough to be fully reloaded
         SceneManager.LoadScene(0);
     }
 
+    /// <summary>
+    /// Called when the mushroom boost button is pressed
+    /// </summary>
     private void MushroomButton()
     {
         if (mushroomCount > 0)

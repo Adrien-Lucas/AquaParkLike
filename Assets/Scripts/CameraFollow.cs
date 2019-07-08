@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Attach to : Main camera
+/// This component manages the camera that follows the player
+/// </summary>
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private float moveHardness = 1;
@@ -12,8 +16,9 @@ public class CameraFollow : MonoBehaviour
     
     void Update()
     {
-        if (target)
+        if (target) //Before having a target, the camera is in "lobby mode", so it should not move
         {
+            // Smoothly moving at the camera holder position
             transform.position = Vector3.Lerp(transform.position, placeHolder.position, moveHardness * Time.deltaTime);
             
             var targetRotation = Quaternion.LookRotation(target.transform.position - transform.position);

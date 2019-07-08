@@ -1,12 +1,15 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Attach to : Player prefab
+/// This component manages all the inputs sent by the player to Movements and every exceptions of being a player
+/// </summary>
 public class Player : MonoBehaviour
 {
     [SerializeField] private float releaseHardness = 1;
     [SerializeField] private float dragControl = 1;
     [SerializeField] private Transform cameraPlaceHolder;
-    
     [SerializeField] private float flyingRotationControl;
     
     private Movements _movements;
@@ -27,7 +30,7 @@ public class Player : MonoBehaviour
         }
     }
     
-    public void InitializeCamera()
+    public void InitializeCamera() //makes the camera follow the character
     {
         //Setting up the camera
         CameraFollow cameraFollow = FindObjectOfType<CameraFollow>();
@@ -38,7 +41,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0)) //The player drags the character on the sides
         {
             float mouseX = Input.GetAxis("Mouse X");
             if (_movements.onPath && _movements.deviationModifAuthorization)
@@ -51,7 +54,7 @@ public class Player : MonoBehaviour
             }
             
         }
-        else if(_movements.deviationModifAuthorization)
+        else if(_movements.deviationModifAuthorization) //When the character is released, he returns to the center of the toboggan by itself
             _movements.deviation = Mathf.Lerp(_movements.deviation, 0, Time.deltaTime * releaseHardness);
     }
 

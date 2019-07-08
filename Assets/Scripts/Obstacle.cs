@@ -18,7 +18,7 @@ public class Obstacle : MonoBehaviour
     {
         transform.GetChild(Random.Range(0, transform.childCount)).gameObject.SetActive(false); //At least on of the obstacle must be shut down to let a way trough
         
-        foreach (Transform obstacle in transform)
+        foreach (Transform obstacle in transform) //Randomly removes the obstacles
             if(Random.Range(0f,1f) < obstacleDensity)
                 obstacle.gameObject.SetActive(false);
     }

@@ -18,12 +18,17 @@ public class Bumper : MonoBehaviour
 
     [SerializeField] private BumperType type;
     [SerializeField] private Movements movementsComponent;
-
-    [SerializeField]
-    private float backBumpSpeedMultiplicator = 2;
-
+    
+    //Making an editor script to show only the necessary parameters depending on the bumper type would have been better
+    [Header("Back bumper parameters")]
+    
+    [SerializeField] private float backBumpSpeedMultiplicator = 2;
     [SerializeField] private float backBumpDuration  = 1;
-    //private bool colliding
+    
+    [Header("Side bumper parameters")]
+    
+    [SerializeField] private float sideBumpTime = 2f;
+    [SerializeField] private float bumpDeviation = 0.4f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -46,8 +51,6 @@ public class Bumper : MonoBehaviour
         }
     }
 
-    [SerializeField] private float sideBumpTime = 2f;
-    [SerializeField] private float bumpDeviation = 0.4f;
 
     
     //Side bumpers moves the slowest character of the collision out of the bounds of the other

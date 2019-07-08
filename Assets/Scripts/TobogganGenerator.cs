@@ -1,8 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
+/// <summary>
+/// Attach to : Game manager object
+/// This component generates a toboggan and starts the game when the generation is done
+/// </summary>
 public class TobogganGenerator : MonoBehaviour
 {
     [Header("Toboggan parameters")]
@@ -20,7 +26,8 @@ public class TobogganGenerator : MonoBehaviour
     [SerializeField] private string cameraLobbyPlaceHolderGameObjectName = "CameraLobbyPlaceHolder";
     
     private int _iterations = 0;
-    public static List<Vector3> TotalPath = new List<Vector3>();
+    private float spawnPosPercent; //percent of the start toboggan
+    [NonSerialized] public static List<Vector3> TotalPath = new List<Vector3>();
 
     // Start is called before the first frame update
     public void Start()
@@ -32,6 +39,9 @@ public class TobogganGenerator : MonoBehaviour
         GenerateParentModule(endPoint);
     }
 
+    /// <summary>
+    /// Recursive function that generates a module
+    /// </summary>
     void GenerateParentModule(Transform module)
     {
         _iterations++;
@@ -45,7 +55,7 @@ public class TobogganGenerator : MonoBehaviour
             InstantiateModule(module, startModule);
             //Path is cleaned from duplicates
             TotalPath = TotalPath.Distinct().ToList();
-            SpawnCharacters();
+            SpawnCharacters(); //The game is initialized here
         }
     }
 
@@ -66,7 +76,7 @@ public class TobogganGenerator : MonoBehaviour
         return parent;
     }
 
-    private float spawnPosPercent; //percent of the start toboggan
+
     void SpawnCharacters()
     {
         SpawnOneCharacter(playerPrefab);
