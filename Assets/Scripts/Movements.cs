@@ -10,7 +10,7 @@ public class Movements : MonoBehaviour
 {
     //Path follow vars
     List<Vector3> totalPath;
-    private int actualWaypoint = 0;
+    [NonSerialized] public int actualWaypoint = 0;
     private int nextWaypoint => actualWaypoint + 1;
     [HideInInspector] public Vector3 posOnPath;
     public static bool Moving; //is Static because all characters starts the competition at the same time

@@ -24,8 +24,6 @@ public class Player : MonoBehaviour
         cameraFollow.placeHolder = cameraPlaceHolder;
     }
 
-
-    private bool lastMoving = false;
     void Update()
     {
         
