@@ -10,12 +10,23 @@ public class Player : MonoBehaviour
     [SerializeField] private float flyingRotationControl;
     
     private Movements _movements;
+    InGameUI _inGameUi;
 
     private void Start()
     {
         _movements = GetComponent<Movements>();
+        _inGameUi = FindObjectOfType<InGameUI>();
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.transform.CompareTag("Finish")) //Finish is the terrain's tag, when the player flies and falls on the floor
+        {
+            _movements.enabled = false;
+            _inGameUi.End();
+        }
+    }
+    
     public void InitializeCamera()
     {
         //Setting up the camera

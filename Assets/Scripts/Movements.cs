@@ -41,10 +41,18 @@ public class Movements : MonoBehaviour
     [NonSerialized] public bool onPath = true; //Says is the player is following the path or flying
     public float ejectionThresold;
     [SerializeField] private float ejectionForce;
+    private Animator _animator;
+    private Player _player;
+    private InGameUI _inGameUi;
+    private Player _player1;
 
     // Start is called before the first frame update
     void Start()
     {
+        _player1 = GetComponent<Player>();
+        _inGameUi = FindObjectOfType<InGameUI>();
+        _player = GetComponent<Player>();
+        _animator = GetComponent<Animator>();
         totalPath = TobogganGenerator.TotalPath;
     }
 
@@ -122,7 +130,9 @@ public class Movements : MonoBehaviour
 
     void PlayEnd()
     {
+        //Final jump animation setup
         Transform characterHolder = new GameObject().transform;
+        characterHolder.parent = transform.parent;
         characterHolder.position = transform.position;
         Vector3 scale = characterHolder.localScale;
         scale.z *= Random.Range(1f, 1.2f);
@@ -130,8 +140,11 @@ public class Movements : MonoBehaviour
         characterHolder.localEulerAngles = Vector3.up * (transform.eulerAngles.y + Random.Range(-5f,5f));
             
         transform.parent = characterHolder.transform;
-        GetComponent<Movements>().enabled = false;
-        GetComponent<Animator>().enabled = true;   
+        enabled = false;
+        _animator.enabled = true;   
+        
+        if(_player)
+            _inGameUi.End();
     }
 
     private void OnCollisionEnter(Collision other)
@@ -146,7 +159,6 @@ public class Movements : MonoBehaviour
     private void StartFly()
     {
         onPath = false;
-        //deviation = 0; //Reset deviation to avoid reejection when touching a toboggan again
         //X rotation axis reset
         Vector3 newRot = transform.eulerAngles;
         newRot.x = 0;
@@ -156,11 +168,7 @@ public class Movements : MonoBehaviour
         transform.position += ((Mathf.Sign(deviation) * transform.right + Vector3.up) * ejectionForce);
     }
 
-    public void ApplyTempDeviation(float modification, float duration)
-    {
-        StartCoroutine(TempDeviation(modification, duration));
-    }
-
+    public void ApplyTempDeviation(float modification, float duration) { StartCoroutine(TempDeviation(modification, duration)); }
     private IEnumerator TempDeviation(float modification, float duration)
     {
         deviationModifAuthorization = false;
@@ -175,16 +183,11 @@ public class Movements : MonoBehaviour
             timer += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
-        if(GetComponent<Player>())
-            Debug.Log(deviation);
+        
         deviationModifAuthorization = true;
     }
 
-    public void ApplyTempMultiplicator(float multiplicator, float duration)
-    {
-        StartCoroutine(TempMultiplicator(multiplicator, duration));
-    }
-    
+    public void ApplyTempMultiplicator(float multiplicator, float duration) { StartCoroutine(TempMultiplicator(multiplicator, duration)); }
     private IEnumerator TempMultiplicator(float multiplicator, float duration)
     {
         speedMultiplicator += multiplicator;

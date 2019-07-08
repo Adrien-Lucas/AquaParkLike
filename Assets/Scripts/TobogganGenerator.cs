@@ -13,6 +13,7 @@ public class TobogganGenerator : MonoBehaviour
     [SerializeField] private int length = 10;
 
     [Header("Lobby parameters")] 
+    
     [SerializeField] private int AINumber;
     [SerializeField] private Transform AIPrefab;
     [SerializeField] private Transform playerPrefab;
@@ -22,9 +23,12 @@ public class TobogganGenerator : MonoBehaviour
     public static List<Vector3> TotalPath = new List<Vector3>();
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         TotalPath.Clear();
+        _iterations = 0;
+        Movements.Moving = false;
+        FindObjectOfType<CameraFollow>().target = null;
         GenerateParentModule(endPoint);
     }
 
@@ -48,7 +52,7 @@ public class TobogganGenerator : MonoBehaviour
     Transform InstantiateModule(Transform actual, Transform type)
     {
         TobogganModule infos = actual.GetComponent<TobogganModule>();
-        Transform parent = Instantiate(type, infos.endLink.position, Quaternion.identity);
+        Transform parent = Instantiate(type, infos.endLink.position, Quaternion.identity, transform);
         
         if (infos.endLink)
         {
@@ -76,7 +80,7 @@ public class TobogganGenerator : MonoBehaviour
     void SpawnOneCharacter(Transform prefab)
     {
         Vector3 spawnPos = TotalPath[0] + (TotalPath[1] - TotalPath[0]) * spawnPosPercent;
-        Transform character = Instantiate(prefab, spawnPos, Quaternion.identity);
+        Transform character = Instantiate(prefab, spawnPos, Quaternion.identity, transform);
         spawnPosPercent += 1f / (AINumber + 1); //+1 is because of the player
         character.GetComponent<Movements>().posOnPath = spawnPos;
     }
